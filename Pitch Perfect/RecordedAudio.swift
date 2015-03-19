@@ -11,10 +11,10 @@ import Foundation
 class RecordedAudio: NSObject {
     //Object that represents recorded audio filepath and title
     
-    var filePathURL: NSURL!
-    var title: String!
+    var filePathURL: NSURL?
+    var title: String?
     
-    init!(filePathURL: NSURL!, title: String){
+    init!(filePathURL: NSURL!, title: String!){
         /*! @abstract Create an object from saved audio containing URL and title of file
         @param filePathURL
         the file to open

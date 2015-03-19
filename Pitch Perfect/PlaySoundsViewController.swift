@@ -31,13 +31,16 @@ class PlaySoundsViewController: UIViewController, AVAudioPlayerDelegate {
     }
     
     override func viewWillDisappear(animated: Bool) {
-        //When back button is hit to segue back to RecordSoundsViewController, removes file from Documents directory to prevent from creating too many files
+        //When back button is hit to segue back to RecordSoundsViewController, removes file from Documents directory to prevent from creating too many files only if receivedAudio.filePathURL is not nil
         //Savings files in /tmp is also possible, however this method prevents the app from ever running without a saved file
         stopPlayback()      //stops all playback prior to deleting file
-        var paths = NSSearchPathForDirectoriesInDomains(.DocumentDirectory, .UserDomainMask, true)[0] as String
-        var fileName = receivedAudio.filePathURL.lastPathComponent as String!
-        var fullFilePath = paths.stringByAppendingPathComponent(fileName)
-        NSFileManager.defaultManager().removeItemAtPath(fullFilePath, error: nil)
+        if receivedAudio.filePathURL != nil {
+            var paths = NSSearchPathForDirectoriesInDomains(.DocumentDirectory, .UserDomainMask, true)[0] as String
+            var fileName = receivedAudio.title! as String!
+            var fullFilePath = paths.stringByAppendingPathComponent(fileName)
+            NSFileManager.defaultManager().removeItemAtPath(fullFilePath, error: nil)
+        }
+
     }
     
     override func didReceiveMemoryWarning() {
