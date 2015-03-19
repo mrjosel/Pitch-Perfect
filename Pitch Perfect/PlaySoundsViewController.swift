@@ -33,17 +33,28 @@ class PlaySoundsViewController: UIViewController, AVAudioPlayerDelegate {
     override func viewWillDisappear(animated: Bool) {
         //When back button is hit to segue back to RecordSoundsViewController, removes file from Documents directory to prevent from creating too many files
         //Savings files in /tmp is also possible, however this method prevents the app from ever running without a saved file
+        stopPlayback()      //stops all playback prior to deleting file
         var paths = NSSearchPathForDirectoriesInDomains(.DocumentDirectory, .UserDomainMask, true)[0] as String
         var fileName = receivedAudio.filePathURL.lastPathComponent as String!
         var fullFilePath = paths.stringByAppendingPathComponent(fileName)
         NSFileManager.defaultManager().removeItemAtPath(fullFilePath, error: nil)
     }
     
-    func playback(rate: Float) {
-        //stops audio, resets to beginning of file, reveals label, plays audio at rate @rate - for simple playback
+    override func didReceiveMemoryWarning() {
+        super.didReceiveMemoryWarning()
+        // Dispose of any resources that can be recreated.
+    }
+    
+    func stopPlayback() {
+        //stops all playback
         audioPlayer.stop()
         audioEngine.stop()
         audioEngine.reset()
+    }
+    
+    func playback(rate: Float) {
+        //stops audio, resets to beginning of file, reveals label, plays audio at rate @rate - for simple playback
+        stopPlayback()
         audioPlayer.rate = rate
         audioPlayer.delegate = self
         audioPlayer.currentTime = 0
@@ -55,9 +66,7 @@ class PlaySoundsViewController: UIViewController, AVAudioPlayerDelegate {
         //Function outside of button to allow use by multiple buttons
         
         //stop and reset all playback functions
-        audioPlayer.stop()
-        audioEngine.stop()
-        audioEngine.reset()
+        stopPlayback()
         
         //used for playing back sound
         var playerNode = AVAudioPlayerNode()
@@ -82,9 +91,7 @@ class PlaySoundsViewController: UIViewController, AVAudioPlayerDelegate {
         //Plays back audio with delay
         
         //stop and reset all playback functions
-        audioPlayer.stop()
-        audioEngine.stop()
-        audioEngine.reset()
+        stopPlayback()
         
         //used for playing back sound
         var playerNode = AVAudioPlayerNode()
@@ -104,13 +111,6 @@ class PlaySoundsViewController: UIViewController, AVAudioPlayerDelegate {
         audioEngine.startAndReturnError(nil)
         playerNode.play()
     }
-    
-    
-    override func didReceiveMemoryWarning() {
-        super.didReceiveMemoryWarning()
-        // Dispose of any resources that can be recreated.
-    }
-    
     
     @IBAction func playSlowAudio(sender: UIButton) {
         //Plays back audio slooooooowly using rate = 0.5
@@ -139,9 +139,7 @@ class PlaySoundsViewController: UIViewController, AVAudioPlayerDelegate {
     
     @IBAction func stopAudio(sender: UIButton) {
         //stops audioPlay and stops/resets audioEngine
-        audioPlayer.stop()
-        audioEngine.stop()
-        audioEngine.reset()
+        stopPlayback()
     }
     
 }
